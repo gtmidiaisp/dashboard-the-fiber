@@ -137,7 +137,8 @@ body {
   background: #fff;
   border: 1px solid rgba(0,0,0,0.07);
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 thead th {
@@ -260,12 +261,12 @@ tfoot td.num    { text-align: right; }
           <tr>
             <th>Dia</th>
             <th>Data</th>
-            <th class="num">Leads</th>
-            <th class="num">Vendidos</th>
-            <th class="num">% Conversão</th>
             <th class="num grp-invest">Investimento</th>
+            <th class="num">Leads</th>
             <th class="num grp-invest">CPL</th>
+            <th class="num">Vendidos</th>
             <th class="num grp-invest">CAC</th>
+            <th class="num">% Conversão</th>
             <th class="num">% Já cliente</th>
             <th class="num">% Sem viab.</th>
             <th class="num">% Sem resp.</th>
@@ -409,7 +410,7 @@ function cat(r) {
 }
 
 function chip(pct) {
-  const cls = pct >= 15 ? 'high' : pct >= 8 ? 'mid' : pct > 0 ? 'low' : 'gray';
+  const cls = pct >= 15 ? 'high' : pct >= 10 ? 'mid' : pct > 0 ? 'low' : 'gray';
   return `<span class="chip ${cls}">${pct.toFixed(1)}%</span>`;
 }
 
@@ -424,7 +425,7 @@ function buildDiaria(rows, invest) {
   const tbody = document.getElementById('tbody-diaria');
   tbody.innerHTML = '';
 
-  let totLeads = 0, totVend = 0, totInvest = 0;
+  let totLeads = 0, totVend = 0, totInvest = 0, totJa = 0, totSv = 0, totSr = 0, totOut = 0;
 
   for (const date of days) {
     const dr = byDay[date];
@@ -432,7 +433,7 @@ function buildDiaria(rows, invest) {
     let vendidos = 0, ja = 0, sv = 0, sr = 0, out = 0;
     for (const r of dr) {
       const c = cat(r);
-      if (c === 'vendido')    vendidos++;
+      if (c === 'vendido')         vendidos++;
       else if (c === 'ja_cliente') ja++;
       else if (c === 'sem_viab')   sv++;
       else if (c === 'sem_resp')   sr++;
@@ -444,19 +445,20 @@ function buildDiaria(rows, invest) {
 
     totLeads  += total;
     totVend   += vendidos;
+    totJa += ja; totSv += sv; totSr += sr; totOut += out;
     if (inv) totInvest += inv;
 
     const pct = v => total > 0 ? v / total * 100 : 0;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="color:#9a9892;font-size:12px;">${getDow(date)}</td>
+      <td style="color:#9a8fa5;font-size:12px;">${getDow(date)}</td>
       <td style="font-weight:600;">${date}</td>
-      <td class="num">${total}</td>
-      <td class="num" style="font-weight:700;color:#792981;">${vendidos}</td>
-      <td class="num">${chip(pct(vendidos))}</td>
       <td class="invest">${inv != null ? fmtBRL(inv) : '<span class="dash">—</span>'}</td>
+      <td class="num">${total}</td>
       <td class="cpl">${cpl != null ? fmtBRL(cpl) : '<span class="dash">—</span>'}</td>
+      <td class="num" style="font-weight:700;color:#792981;">${vendidos}</td>
       <td class="cac">${cac != null ? fmtBRL(cac) : '<span class="dash">—</span>'}</td>
+      <td class="num">${chip(pct(vendidos))}</td>
       <td class="num"><span class="chip gray">${pct(ja).toFixed(1)}%</span></td>
       <td class="num"><span class="chip gray">${pct(sv).toFixed(1)}%</span></td>
       <td class="num"><span class="chip gray">${pct(sr).toFixed(1)}%</span></td>
@@ -466,19 +468,22 @@ function buildDiaria(rows, invest) {
   }
 
   // Totals footer
-  const totCPL = totInvest > 0 && totLeads > 0 ? totInvest / totLeads : null;
-  const totCAC = totInvest > 0 && totVend  > 0 ? totInvest / totVend  : null;
-  const totConv = totLeads > 0 ? (totVend / totLeads * 100).toFixed(1) + '%' : '—';
+  const totCPL  = totInvest > 0 && totLeads > 0 ? totInvest / totLeads : null;
+  const totCAC  = totInvest > 0 && totVend  > 0 ? totInvest / totVend  : null;
+  const p = v => totLeads > 0 ? (v / totLeads * 100).toFixed(1) + '%' : '—';
   const tfoot = document.getElementById('tfoot-diaria');
   tfoot.innerHTML = `<tr>
     <td colspan="2" style="color:#5f5e5a;">Total do período</td>
-    <td class="num">${totLeads}</td>
-    <td class="num" style="color:#792981;">${totVend}</td>
-    <td class="num">${totConv}</td>
     <td class="invest">${fmtBRL(totInvest)}</td>
+    <td class="num">${totLeads}</td>
     <td class="cpl">${totCPL != null ? fmtBRL(totCPL) : '—'}</td>
+    <td class="num" style="color:#792981;">${totVend}</td>
     <td class="cac">${totCAC != null ? fmtBRL(totCAC) : '—'}</td>
-    <td colspan="4"></td>
+    <td class="num">${p(totVend)}</td>
+    <td class="num">${p(totJa)}</td>
+    <td class="num">${p(totSv)}</td>
+    <td class="num">${p(totSr)}</td>
+    <td class="num">${p(totOut)}</td>
   </tr>`;
 }
 
