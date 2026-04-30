@@ -142,34 +142,35 @@ body {
 }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 thead th {
-  padding: 11px 14px;
+  padding: 14px 18px;
   text-align: left; white-space: nowrap;
-  font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
-  color: #9a8fa5; background: #f8f6fb;
-  border-bottom: 1px solid rgba(0,0,0,0.07);
+  font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+  color: #aaa8b0; background: #fff;
+  border-bottom: 1px solid #ebebeb;
 }
 thead th.num { text-align: right; }
-thead th.grp-invest { background: var(--purple-light); color: var(--brand-purple); }
-tbody tr { border-bottom: 1px solid rgba(0,0,0,0.04); transition: background .1s; }
+thead th.grp-invest { color: #aaa8b0; background: #fff; }
+tbody tr { border-bottom: 1px solid #f0f0f0; transition: background .12s; }
 tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: #faf8fc; }
-tbody td { padding: 11px 14px; white-space: nowrap; }
-tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
-tbody td.invest { text-align: right; font-variant-numeric: tabular-nums; color: var(--brand-purple); font-weight: 700; }
-tbody td.cpl    { text-align: right; font-variant-numeric: tabular-nums; color: var(--brand-blue); font-weight: 600; }
-tbody td.cac    { text-align: right; font-variant-numeric: tabular-nums; color: #c0392b; font-weight: 600; }
-.dash { color: #cdc7d6; font-weight: 400; }
+tbody tr:hover { background: #fafafa; }
+tbody td { padding: 14px 18px; white-space: nowrap; color: #2c2c30; }
+tbody td.num { text-align: right; font-variant-numeric: tabular-nums; color: #2c2c30; }
+tbody td.invest { text-align: right; font-variant-numeric: tabular-nums; color: #2c2c30; font-weight: 600; }
+tbody td.cpl    { text-align: right; font-variant-numeric: tabular-nums; color: #2c2c30; font-weight: 500; }
+tbody td.cac    { text-align: right; font-variant-numeric: tabular-nums; color: #2c2c30; font-weight: 500; }
+.dash { color: #d0d0d0; font-weight: 400; }
 
-/* ── Chips ── */
+/* ── Chips — conversão only ── */
 .chip {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 3px 10px; border-radius: 20px;
+  padding: 3px 10px; border-radius: 5px;
   font-size: 12px; font-weight: 600; min-width: 54px;
+  letter-spacing: .01em;
 }
-.chip.high { background: #ddf3fb; color: #0e6a8a; }
-.chip.mid  { background: #FEF3C7; color: #92400E; }
-.chip.low  { background: #fde8f5; color: var(--brand-purple); }
-.chip.gray { background: #f0edf6; color: #7a6e8a; }
+.chip.high { background: #e8f5e9; color: #2e7d32; }
+.chip.mid  { background: #fffde7; color: #856404; }
+.chip.low  { background: #fdecea; color: #c62828; }
+.chip.gray { background: transparent; color: #888; font-weight: 400; }
 
 /* ── Charts ── */
 .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
@@ -216,14 +217,14 @@ tbody td.cac    { text-align: right; font-variant-numeric: tabular-nums; color: 
 
 /* ── Totals row ── */
 tfoot td {
-  padding: 11px 14px; font-weight: 700; font-size: 13px;
-  background: #f8f6fb; border-top: 1px solid rgba(0,0,0,0.08);
-  white-space: nowrap;
+  padding: 14px 18px; font-weight: 700; font-size: 13px;
+  background: #fafafa; border-top: 1px solid #ebebeb;
+  white-space: nowrap; color: #2c2c30;
 }
-tfoot td.invest { color: var(--brand-purple); text-align: right; }
-tfoot td.cpl    { color: var(--brand-blue);   text-align: right; }
-tfoot td.cac    { color: #c0392b; text-align: right; }
-tfoot td.num    { text-align: right; }
+tfoot td.invest { color: #2c2c30; text-align: right; }
+tfoot td.cpl    { color: #2c2c30; text-align: right; }
+tfoot td.cac    { color: #2c2c30; text-align: right; }
+tfoot td.num    { text-align: right; color: #2c2c30; }
 </style>
 </head>
 <body>
@@ -451,18 +452,18 @@ function buildDiaria(rows, invest) {
     const pct = v => total > 0 ? v / total * 100 : 0;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="color:#9a8fa5;font-size:12px;">${getDow(date)}</td>
-      <td style="font-weight:600;">${date}</td>
+      <td style="color:#aaa8b0;font-size:12px;font-weight:500;">${getDow(date)}</td>
+      <td style="font-weight:600;color:#1e1a24;">${date}</td>
       <td class="invest">${inv != null ? fmtBRL(inv) : '<span class="dash">—</span>'}</td>
       <td class="num">${total}</td>
       <td class="cpl">${cpl != null ? fmtBRL(cpl) : '<span class="dash">—</span>'}</td>
-      <td class="num" style="font-weight:700;color:#792981;">${vendidos}</td>
+      <td class="num" style="font-weight:600;">${vendidos}</td>
       <td class="cac">${cac != null ? fmtBRL(cac) : '<span class="dash">—</span>'}</td>
       <td class="num">${chip(pct(vendidos))}</td>
-      <td class="num"><span class="chip gray">${pct(ja).toFixed(1)}%</span></td>
-      <td class="num"><span class="chip gray">${pct(sv).toFixed(1)}%</span></td>
-      <td class="num"><span class="chip gray">${pct(sr).toFixed(1)}%</span></td>
-      <td class="num"><span class="chip gray">${pct(out).toFixed(1)}%</span></td>
+      <td class="num" style="color:#888;">${pct(ja).toFixed(1)}%</td>
+      <td class="num" style="color:#888;">${pct(sv).toFixed(1)}%</td>
+      <td class="num" style="color:#888;">${pct(sr).toFixed(1)}%</td>
+      <td class="num" style="color:#888;">${pct(out).toFixed(1)}%</td>
     `;
     tbody.appendChild(tr);
   }
@@ -473,11 +474,11 @@ function buildDiaria(rows, invest) {
   const p = v => totLeads > 0 ? (v / totLeads * 100).toFixed(1) + '%' : '—';
   const tfoot = document.getElementById('tfoot-diaria');
   tfoot.innerHTML = `<tr>
-    <td colspan="2" style="color:#5f5e5a;">Total do período</td>
+    <td colspan="2">Total do período</td>
     <td class="invest">${fmtBRL(totInvest)}</td>
     <td class="num">${totLeads}</td>
     <td class="cpl">${totCPL != null ? fmtBRL(totCPL) : '—'}</td>
-    <td class="num" style="color:#792981;">${totVend}</td>
+    <td class="num">${totVend}</td>
     <td class="cac">${totCAC != null ? fmtBRL(totCAC) : '—'}</td>
     <td class="num">${p(totVend)}</td>
     <td class="num">${p(totJa)}</td>
