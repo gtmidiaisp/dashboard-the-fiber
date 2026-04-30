@@ -4,22 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard – The Fiber</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Staatliches&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
-:root { color-scheme: light; }
+:root {
+  --brand-purple: #792981;
+  --brand-blue:   #2BAAE2;
+  --brand-teal:   #00384D;
+  --purple-light: #f5edf7;
+  --blue-light:   #e8f6fd;
+  --teal-light:   #e0ecf0;
+  color-scheme: light;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-  background: #f4f3ef;
-  color: #2c2c2a;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f5f4f9;
+  color: #1e1a24;
   font-size: 14px;
   min-height: 100vh;
 }
 
 /* ── Header ── */
 .header {
-  background: #fff;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  background: var(--brand-teal);
   padding: 14px 24px;
   display: flex;
   align-items: center;
@@ -28,45 +38,56 @@ body {
   top: 0;
   z-index: 10;
 }
-.brand { display: flex; align-items: center; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 14px; }
 .brand-badge {
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, #1D9E75 0%, #185FA5 100%);
-  border-radius: 9px;
+  width: 38px; height: 38px;
+  background: var(--brand-purple);
+  border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700; color: #fff; letter-spacing: -.5px;
+  font-size: 14px; font-weight: 800; color: var(--brand-blue); letter-spacing: -1px;
+  font-family: 'Inter', sans-serif;
 }
-.brand-name { font-size: 15px; font-weight: 600; color: #1a1a18; }
-.header-sub { font-size: 12px; color: #9a9892; margin-top: 1px; }
+.brand-logo {
+  display: flex; flex-direction: column; gap: 1px;
+}
+.brand-logo-line1 {
+  font-size: 18px; line-height: 1; font-family: 'Inter', sans-serif; font-weight: 400; letter-spacing: -.3px;
+}
+.brand-logo-line1 .the  { color: var(--brand-blue); }
+.brand-logo-line1 .fiber { color: #fff; font-weight: 800; }
+.header-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 1px; letter-spacing: .02em; }
 .reload-btn {
-  font-size: 12px; color: #5f5e5a;
-  background: none;
-  border: 1px solid rgba(0,0,0,0.14);
-  border-radius: 7px;
-  padding: 7px 14px;
+  font-size: 12px; color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 7px 15px;
   cursor: pointer;
   display: flex; align-items: center; gap: 6px;
-  transition: background .15s, border-color .15s;
+  transition: background .15s;
+  font-family: 'Inter', sans-serif;
 }
-.reload-btn:hover { background: #eeecea; border-color: rgba(0,0,0,0.2); }
+.reload-btn:hover { background: rgba(255,255,255,0.18); }
 
 /* ── Tabs ── */
 .tabs {
   display: flex;
   padding: 0 24px;
   background: #fff;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 2px solid #ede9f2;
   gap: 4px;
 }
 .tab-btn {
-  font-size: 13px; padding: 11px 16px;
+  font-size: 13px; padding: 12px 18px;
   background: none; border: none;
-  border-bottom: 2px solid transparent;
-  cursor: pointer; color: #9a9892; font-weight: 400;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer; color: #9a8fa5; font-weight: 500;
   transition: color .15s;
+  font-family: 'Inter', sans-serif;
 }
-.tab-btn.active { color: #1a1a18; border-bottom-color: #185FA5; font-weight: 600; }
-.tab-btn:hover:not(.active) { color: #5f5e5a; }
+.tab-btn.active { color: var(--brand-purple); border-bottom-color: var(--brand-purple); font-weight: 700; }
+.tab-btn:hover:not(.active) { color: #5a4d66; }
 
 /* ── Layout ── */
 .content { padding: 22px 24px; max-width: 1400px; margin: 0 auto; }
@@ -75,9 +96,10 @@ body {
 
 /* ── Section labels ── */
 .section-label {
-  font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: .07em;
-  color: #9a9892; margin-bottom: 10px;
+  font-family: 'Staatliches', sans-serif;
+  font-size: 14px; font-weight: 400; letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--brand-teal); margin-bottom: 10px;
 }
 
 /* ── Cards ── */
@@ -86,7 +108,7 @@ body {
 
 .card {
   background: #fff;
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.07);
   border-radius: 12px;
   padding: 18px 20px;
   position: relative; overflow: hidden;
@@ -95,23 +117,25 @@ body {
   position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 12px 12px 0 0;
 }
 .card .label {
-  font-size: 11px; color: #9a9892; font-weight: 600;
-  text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px;
+  font-size: 11px; color: #9a8fa5; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px;
 }
-.card .value { font-size: 30px; font-weight: 700; line-height: 1; color: #1a1a18; }
+.card .value { font-size: 30px; font-weight: 800; line-height: 1; color: #1e1a24; }
 .card .value.sm { font-size: 22px; }
-.card .sub { font-size: 12px; color: #9a9892; margin-top: 5px; }
-.c-blue   .value { color: #185FA5; } .c-blue   .card-accent { background: #185FA5; }
-.c-green  .value { color: #0F6E56; } .c-green  .card-accent { background: #1D9E75; }
-.c-amber  .value { color: #B45309; } .c-amber  .card-accent { background: #F59E0B; }
-.c-purple .value { color: #6D28D9; } .c-purple .card-accent { background: #7C3AED; }
-.c-teal   .value { color: #0E7490; } .c-teal   .card-accent { background: #06B6D4; }
-.c-red    .value { color: #B91C1C; } .c-red    .card-accent { background: #EF4444; }
+.card .sub { font-size: 12px; color: #a099ab; margin-top: 5px; }
+
+/* Brand-mapped card colors */
+.c-blue   .value { color: var(--brand-blue); }   .c-blue   .card-accent { background: var(--brand-blue); }
+.c-green  .value { color: var(--brand-teal); }   .c-green  .card-accent { background: var(--brand-teal); }
+.c-amber  .value { color: #9c6b00; }              .c-amber  .card-accent { background: #F59E0B; }
+.c-purple .value { color: var(--brand-purple); } .c-purple .card-accent { background: var(--brand-purple); }
+.c-teal   .value { color: var(--brand-blue); }   .c-teal   .card-accent { background: var(--brand-blue); }
+.c-red    .value { color: #c0392b; }              .c-red    .card-accent { background: #e74c3c; }
 
 /* ── Table ── */
 .table-wrap {
   background: #fff;
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.07);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -120,20 +144,20 @@ thead th {
   padding: 11px 14px;
   text-align: left; white-space: nowrap;
   font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
-  color: #9a9892; background: #f4f3ef;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  color: #9a8fa5; background: #f8f6fb;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
 }
 thead th.num { text-align: right; }
-thead th.grp-invest { background: #f0edf9; color: #6D28D9; }
-tbody tr { border-bottom: 1px solid rgba(0,0,0,0.05); transition: background .1s; }
+thead th.grp-invest { background: var(--purple-light); color: var(--brand-purple); }
+tbody tr { border-bottom: 1px solid rgba(0,0,0,0.04); transition: background .1s; }
 tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: #faf9f7; }
+tbody tr:hover { background: #faf8fc; }
 tbody td { padding: 11px 14px; white-space: nowrap; }
 tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
-tbody td.invest { text-align: right; font-variant-numeric: tabular-nums; color: #6D28D9; font-weight: 600; }
-tbody td.cpl    { text-align: right; font-variant-numeric: tabular-nums; color: #0E7490; font-weight: 600; }
-tbody td.cac    { text-align: right; font-variant-numeric: tabular-nums; color: #B91C1C; font-weight: 600; }
-.dash { color: #d1d0cc; font-weight: 400; }
+tbody td.invest { text-align: right; font-variant-numeric: tabular-nums; color: var(--brand-purple); font-weight: 700; }
+tbody td.cpl    { text-align: right; font-variant-numeric: tabular-nums; color: var(--brand-blue); font-weight: 600; }
+tbody td.cac    { text-align: right; font-variant-numeric: tabular-nums; color: #c0392b; font-weight: 600; }
+.dash { color: #cdc7d6; font-weight: 400; }
 
 /* ── Chips ── */
 .chip {
@@ -141,62 +165,63 @@ tbody td.cac    { text-align: right; font-variant-numeric: tabular-nums; color: 
   padding: 3px 10px; border-radius: 20px;
   font-size: 12px; font-weight: 600; min-width: 54px;
 }
-.chip.high { background: #D1FAE5; color: #065F46; }
+.chip.high { background: #ddf3fb; color: #0e6a8a; }
 .chip.mid  { background: #FEF3C7; color: #92400E; }
-.chip.low  { background: #FEE2E2; color: #991B1B; }
-.chip.gray { background: #F3F4F6; color: #6B7280; }
+.chip.low  { background: #fde8f5; color: var(--brand-purple); }
+.chip.gray { background: #f0edf6; color: #7a6e8a; }
 
 /* ── Charts ── */
 .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
 .chart-card {
-  background: #fff; border: 1px solid rgba(0,0,0,0.08);
+  background: #fff; border: 1px solid rgba(0,0,0,0.07);
   border-radius: 12px; padding: 20px;
 }
 .chart-card.full { grid-column: 1 / -1; }
 .chart-card h3 {
-  font-size: 11px; font-weight: 700; color: #9a9892;
-  text-transform: uppercase; letter-spacing: .07em; margin-bottom: 16px;
+  font-family: 'Staatliches', sans-serif;
+  font-size: 14px; font-weight: 400; color: var(--brand-teal);
+  text-transform: uppercase; letter-spacing: .1em; margin-bottom: 16px;
 }
-.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; font-size: 12px; color: #5f5e5a; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; font-size: 12px; color: #6d6278; }
 .legend span { display: flex; align-items: center; gap: 6px; }
 .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
 
 /* Hot leads block */
 .quentes-block { display: flex; flex-direction: column; justify-content: center; gap: 22px; height: 100%; }
-.big-num { font-size: 54px; font-weight: 800; color: #0F6E56; line-height: 1; }
-.big-sub { font-size: 13px; color: #9a9892; margin-top: 6px; }
+.big-num { font-size: 54px; font-weight: 800; color: var(--brand-blue); line-height: 1; }
+.big-sub { font-size: 13px; color: #a099ab; margin-top: 6px; }
 .prog-wrap { background: rgba(0,0,0,0.06); border-radius: 8px; height: 10px; overflow: hidden; margin-top: 10px; }
-.prog-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg,#1D9E75,#0F6E56); transition: width .7s ease; }
+.prog-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, var(--brand-blue), #1a86be); transition: width .7s ease; }
 .stat-row { display: flex; flex-direction: column; gap: 10px; }
-.stat-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #5f5e5a; }
-.stat-item strong { color: #1a1a18; font-weight: 700; }
+.stat-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #6d6278; }
+.stat-item strong { color: #1e1a24; font-weight: 700; }
 
 /* ── Loading / Error ── */
 .loading {
   display: flex; flex-direction: column; align-items: center;
-  justify-content: center; height: 340px; color: #9a9892; gap: 14px; font-size: 14px;
+  justify-content: center; height: 340px; color: #9a8fa5; gap: 14px; font-size: 14px;
 }
 .spinner {
   width: 28px; height: 28px;
-  border: 2.5px solid rgba(0,0,0,0.08); border-top-color: #185FA5;
+  border: 2.5px solid rgba(0,0,0,0.08); border-top-color: var(--brand-purple);
   border-radius: 50%; animation: spin .7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .error-msg {
-  background: #FEE2E2; color: #991B1B;
-  border: 1px solid #FECACA; border-radius: 10px;
+  background: #fde8f5; color: var(--brand-purple);
+  border: 1px solid #f0c0e0; border-radius: 10px;
   padding: 14px 18px; font-size: 13px; margin: 16px 0;
 }
 
 /* ── Totals row ── */
 tfoot td {
   padding: 11px 14px; font-weight: 700; font-size: 13px;
-  background: #f4f3ef; border-top: 1px solid rgba(0,0,0,0.1);
+  background: #f8f6fb; border-top: 1px solid rgba(0,0,0,0.08);
   white-space: nowrap;
 }
-tfoot td.invest { color: #6D28D9; text-align: right; }
-tfoot td.cpl    { color: #0E7490; text-align: right; }
-tfoot td.cac    { color: #B91C1C; text-align: right; }
+tfoot td.invest { color: var(--brand-purple); text-align: right; }
+tfoot td.cpl    { color: var(--brand-blue);   text-align: right; }
+tfoot td.cac    { color: #c0392b; text-align: right; }
 tfoot td.num    { text-align: right; }
 </style>
 </head>
@@ -204,9 +229,11 @@ tfoot td.num    { text-align: right; }
 
 <div class="header">
   <div class="brand">
-    <div class="brand-badge">TF</div>
-    <div>
-      <div class="brand-name">The Fiber — Dashboard de Vendas</div>
+    <div class="brand-badge">&gt;&gt;</div>
+    <div class="brand-logo">
+      <div class="brand-logo-line1">
+        <span class="the">the</span><span class="fiber">fiber</span>
+      </div>
       <div class="header-sub" id="periodo">Carregando...</div>
     </div>
   </div>
@@ -425,7 +452,7 @@ function buildDiaria(rows, invest) {
       <td style="color:#9a9892;font-size:12px;">${getDow(date)}</td>
       <td style="font-weight:600;">${date}</td>
       <td class="num">${total}</td>
-      <td class="num" style="font-weight:700;color:#185FA5;">${vendidos}</td>
+      <td class="num" style="font-weight:700;color:#792981;">${vendidos}</td>
       <td class="num">${chip(pct(vendidos))}</td>
       <td class="invest">${inv != null ? fmtBRL(inv) : '<span class="dash">—</span>'}</td>
       <td class="cpl">${cpl != null ? fmtBRL(cpl) : '<span class="dash">—</span>'}</td>
@@ -446,7 +473,7 @@ function buildDiaria(rows, invest) {
   tfoot.innerHTML = `<tr>
     <td colspan="2" style="color:#5f5e5a;">Total do período</td>
     <td class="num">${totLeads}</td>
-    <td class="num" style="color:#185FA5;">${totVend}</td>
+    <td class="num" style="color:#792981;">${totVend}</td>
     <td class="num">${totConv}</td>
     <td class="invest">${fmtBRL(totInvest)}</td>
     <td class="cpl">${totCPL != null ? fmtBRL(totCPL) : '—'}</td>
@@ -530,7 +557,7 @@ function buildCompilado(rows, invest) {
   /* Doughnut chart */
   const labels = ['Vendas (Comprar)', 'Já é cliente', 'Sem viabilidade', 'Sem resposta', 'Outros'];
   const values = [vendidos, ja, sv, sr, out];
-  const colors = ['#1D9E75','#185FA5','#EF4444','#9CA3AF','#F59E0B'];
+  const colors = ['#792981','#2BAAE2','#00384D','#a099ab','#F59E0B'];
   const legendEl = document.getElementById('legend-motivo');
   legendEl.innerHTML = labels.map((l, i) => {
     const pct = total > 0 ? (values[i] / total * 100).toFixed(1) : '0.0';
@@ -558,7 +585,7 @@ function buildCompilado(rows, invest) {
     </div>
     <div class="stat-row">
       <div class="stat-item"><span>Quentes totais</span><strong>${quentes}</strong></div>
-      <div class="stat-item"><span>Convertidos</span><strong style="color:#0F6E56">${qVend}</strong></div>
+      <div class="stat-item"><span>Convertidos</span><strong style="color:#792981">${qVend}</strong></div>
       <div class="stat-item"><span>Não convertidos</span><strong>${quentes - qVend}</strong></div>
     </div>
   `;
@@ -613,17 +640,17 @@ function buildTrend(rows, invest) {
         {
           label: 'Investimento (R$)',
           data: investData,
-          borderColor: '#7C3AED', backgroundColor: 'rgba(124,58,237,0.07)',
+          borderColor: '#792981', backgroundColor: 'rgba(121,41,129,0.07)',
           fill: true, tension: 0.35,
-          pointBackgroundColor: '#7C3AED', pointRadius: 4, pointHoverRadius: 6,
+          pointBackgroundColor: '#792981', pointRadius: 4, pointHoverRadius: 6,
           spanGaps: false
         },
         {
           label: 'CAC (R$/venda)',
           data: cacData,
-          borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.07)',
+          borderColor: '#c0392b', backgroundColor: 'rgba(192,57,43,0.07)',
           fill: true, tension: 0.35,
-          pointBackgroundColor: '#EF4444', pointRadius: 4, pointHoverRadius: 6,
+          pointBackgroundColor: '#c0392b', pointRadius: 4, pointHoverRadius: 6,
           spanGaps: false
         }
       ]
@@ -650,16 +677,16 @@ function buildTrend(rows, invest) {
         {
           label: 'Leads',
           data: leadsData,
-          borderColor: '#185FA5', backgroundColor: 'rgba(24,95,165,0.07)',
+          borderColor: '#2BAAE2', backgroundColor: 'rgba(43,170,226,0.07)',
           fill: true, tension: 0.35,
-          pointBackgroundColor: '#185FA5', pointRadius: 4, pointHoverRadius: 6
+          pointBackgroundColor: '#2BAAE2', pointRadius: 4, pointHoverRadius: 6
         },
         {
           label: 'Vendidos',
           data: vendidosData,
-          borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.07)',
+          borderColor: '#792981', backgroundColor: 'rgba(121,41,129,0.07)',
           fill: true, tension: 0.35,
-          pointBackgroundColor: '#1D9E75', pointRadius: 4, pointHoverRadius: 6
+          pointBackgroundColor: '#792981', pointRadius: 4, pointHoverRadius: 6
         }
       ]
     },
