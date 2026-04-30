@@ -275,9 +275,18 @@ tfoot td.num    { text-align: right; }
 
     <div class="charts-row">
       <div class="chart-card full">
-        <h3>Evolução diária — CPL e CAC (R$)</h3>
+        <h3>Evolução diária — Investimento e CAC (R$)</h3>
         <div style="position:relative;height:230px;">
           <canvas id="chartTrend"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card full">
+        <h3>Evolução diária — Leads e Vendidos</h3>
+        <div style="position:relative;height:230px;">
+          <canvas id="chartLeads"></canvas>
         </div>
       </div>
     </div>
@@ -292,7 +301,7 @@ const INVEST_URL  = INVEST_GID
   ? `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${INVEST_GID}`
   : `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&sheet=Gasto%20Google%20Ads`;
 
-let chartMotivo = null, chartTrend = null;
+let chartMotivo = null, chartTrend = null, chartLeads = null;
 
 /* ── Utils ── */
 function switchTab(name, btn) {
@@ -571,27 +580,42 @@ function buildTrend(rows, invest) {
     return (ma * 100 + da) - (mb * 100 + db);
   });
 
-  const cplData = sorted.map(d => {
-    const inv = invest[d];
-    return (inv && byDay[d].leads > 0) ? +(inv / byDay[d].leads).toFixed(2) : null;
+  const lineOpts = (responsive) => ({
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: true, labels: { font: { size: 12 }, color: '#5f5e5a', boxWidth: 12, boxHeight: 12, borderRadius: 3 } }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 11 }, color: '#9a9892' } },
+      y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 11 }, color: '#9a9892' } }
+    }
   });
-  const cacData = sorted.map(d => {
+
+  /* Gráfico 1: Investimento e CAC */
+  const investData = sorted.map(d => invest[d] != null ? +invest[d].toFixed(2) : null);
+  const cacData    = sorted.map(d => {
     const inv = invest[d];
     return (inv && byDay[d].vend > 0) ? +(inv / byDay[d].vend).toFixed(2) : null;
   });
 
   if (chartTrend) { chartTrend.destroy(); chartTrend = null; }
+  const opts1 = lineOpts();
+  opts1.plugins.tooltip = {
+    callbacks: { label: c => c.parsed.y != null ? ` ${c.dataset.label}: ${fmtBRL(c.parsed.y)}` : ` ${c.dataset.label}: —` }
+  };
+  opts1.scales.y.ticks.callback = v => 'R$ ' + v.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
   chartTrend = new Chart(document.getElementById('chartTrend').getContext('2d'), {
     type: 'line',
     data: {
       labels: sorted,
       datasets: [
         {
-          label: 'CPL (R$/lead)',
-          data: cplData,
-          borderColor: '#0E7490', backgroundColor: 'rgba(14,116,144,0.07)',
+          label: 'Investimento (R$)',
+          data: investData,
+          borderColor: '#7C3AED', backgroundColor: 'rgba(124,58,237,0.07)',
           fill: true, tension: 0.35,
-          pointBackgroundColor: '#0E7490', pointRadius: 4, pointHoverRadius: 6,
+          pointBackgroundColor: '#7C3AED', pointRadius: 4, pointHoverRadius: 6,
           spanGaps: false
         },
         {
@@ -604,28 +628,42 @@ function buildTrend(rows, invest) {
         }
       ]
     },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { display: true, labels: { font: { size: 12 }, color: '#5f5e5a', boxWidth: 12, boxHeight: 12, borderRadius: 3 } },
-        tooltip: {
-          callbacks: {
-            label: c => c.parsed.y != null ? ` ${c.dataset.label}: ${fmtBRL(c.parsed.y)}` : ` ${c.dataset.label}: —`
-          }
+    options: opts1
+  });
+
+  /* Gráfico 2: Leads e Vendidos */
+  const leadsData   = sorted.map(d => byDay[d].leads);
+  const vendidosData = sorted.map(d => byDay[d].vend);
+
+  if (chartLeads) { chartLeads.destroy(); chartLeads = null; }
+  const opts2 = lineOpts();
+  opts2.plugins.tooltip = {
+    callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y}` }
+  };
+  opts2.scales.y.ticks.callback = v => Math.floor(v) === v ? v : '';
+  opts2.scales.y.beginAtZero = true;
+  chartLeads = new Chart(document.getElementById('chartLeads').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: sorted,
+      datasets: [
+        {
+          label: 'Leads',
+          data: leadsData,
+          borderColor: '#185FA5', backgroundColor: 'rgba(24,95,165,0.07)',
+          fill: true, tension: 0.35,
+          pointBackgroundColor: '#185FA5', pointRadius: 4, pointHoverRadius: 6
+        },
+        {
+          label: 'Vendidos',
+          data: vendidosData,
+          borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.07)',
+          fill: true, tension: 0.35,
+          pointBackgroundColor: '#1D9E75', pointRadius: 4, pointHoverRadius: 6
         }
-      },
-      scales: {
-        x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 11 }, color: '#9a9892' } },
-        y: {
-          grid: { color: 'rgba(0,0,0,0.04)' },
-          ticks: {
-            font: { size: 11 }, color: '#9a9892',
-            callback: v => 'R$ ' + v.toLocaleString('pt-BR', { maximumFractionDigits: 0 })
-          }
-        }
-      }
-    }
+      ]
+    },
+    options: opts2
   });
 }
 
