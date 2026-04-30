@@ -474,11 +474,11 @@ function buildDiaria(rows, invest) {
   const p = v => totLeads > 0 ? (v / totLeads * 100).toFixed(1) + '%' : '—';
   const tfoot = document.getElementById('tfoot-diaria');
   tfoot.innerHTML = `<tr>
-    <td colspan="2" style="color:#5f5e5a;">Total do período</td>
+    <td colspan="2">Total do período</td>
     <td class="invest">${fmtBRL(totInvest)}</td>
     <td class="num">${totLeads}</td>
     <td class="cpl">${totCPL != null ? fmtBRL(totCPL) : '—'}</td>
-    <td class="num" style="color:#792981;">${totVend}</td>
+    <td class="num">${totVend}</td>
     <td class="cac">${totCAC != null ? fmtBRL(totCAC) : '—'}</td>
     <td class="num">${p(totVend)}</td>
     <td class="num">${p(totJa)}</td>
