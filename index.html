@@ -759,14 +759,14 @@ async function loadData() {
   }
 }
 
-/* ── Auto-refresh às 7h, 12h, 15h e 18h ── */
-const REFRESH_HOURS = [7, 12, 15, 18];
-let lastAutoRefreshHour = -1;
+/* ── Auto-refresh diário às 7:30 ── */
+let autoRefreshedToday = null;
 
 setInterval(() => {
-  const h = new Date().getHours();
-  if (REFRESH_HOURS.includes(h) && h !== lastAutoRefreshHour) {
-    lastAutoRefreshHour = h;
+  const now = new Date();
+  const today = now.toDateString();
+  if (now.getHours() === 7 && now.getMinutes() >= 30 && autoRefreshedToday !== today) {
+    autoRefreshedToday = today;
     loadData();
   }
 }, 60 * 1000);
