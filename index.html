@@ -56,6 +56,7 @@ body {
 .brand-logo-line1 .the  { color: var(--brand-blue); }
 .brand-logo-line1 .fiber { color: #fff; font-weight: 800; }
 .header-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 1px; letter-spacing: .02em; }
+.header-updated { font-size: 10px; color: rgba(255,255,255,0.38); margin-top: 2px; letter-spacing: .02em; }
 .reload-btn {
   font-size: 12px; color: rgba(255,255,255,0.8);
   background: rgba(255,255,255,0.1);
@@ -237,6 +238,7 @@ tfoot td.num    { text-align: right; color: #fff; }
         <span class="the">the</span><span class="fiber">fiber</span>
       </div>
       <div class="header-sub" id="periodo">Carregando...</div>
+      <div class="header-updated" id="ultima-atualizacao"></div>
     </div>
   </div>
   <button class="reload-btn" onclick="loadData()">↻ Atualizar</button>
@@ -744,6 +746,11 @@ async function loadData() {
     document.getElementById('tab-compilado').style.display = 'block';
     document.getElementById('tab-compilado').classList.add('active');
 
+    const now = new Date();
+    document.getElementById('ultima-atualizacao').textContent =
+      'Atualizado às ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) +
+      ' de ' + now.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
   } catch (e) {
     document.getElementById('loading').style.display = 'none';
     const el = document.getElementById('error');
@@ -751,6 +758,18 @@ async function loadData() {
     el.textContent = 'Erro ao carregar: ' + (e.message || String(e));
   }
 }
+
+/* ── Auto-refresh às 7h, 12h, 15h e 18h ── */
+const REFRESH_HOURS = [7, 12, 15, 18];
+let lastAutoRefreshHour = -1;
+
+setInterval(() => {
+  const h = new Date().getHours();
+  if (REFRESH_HOURS.includes(h) && h !== lastAutoRefreshHour) {
+    lastAutoRefreshHour = h;
+    loadData();
+  }
+}, 60 * 1000);
 
 loadData();
 </script>
